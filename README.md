@@ -6,7 +6,7 @@
 | Hostname  | Role |
 | --- | --- |
 | conjur.vx  | Conjur master, Puppet server  |
-| jenkins.vx  | Puppet agent  |
+| foxtrot.vx  | Puppet agent  |
 | mysql.vx  | MySQL server  |
 
 # 1. Setup MySQL database
@@ -39,7 +39,7 @@ yum -y install https://yum.puppetlabs.com/puppet-release-el-8.noarch.rpm
 yum -y install puppet-agent
 cat << EOF >> /etc/puppetlabs/puppet/puppet.conf
 [main]
-certname = jenkins.vx
+certname = foxtrot.vx
 server = conjur.vx
 EOF
 /opt/puppetlabs/bin/puppet resource service puppet ensure=running enable=true
@@ -48,7 +48,7 @@ EOF
 - Check and sign CSR on Puppet server
 ```console
 /opt/puppetlabs/bin/puppetserver ca list
-/opt/puppetlabs/bin/puppetserver ca sign --certname jenkins.vx
+/opt/puppetlabs/bin/puppetserver ca sign --certname foxtrot.vx
 ```
 # 4. Preparatory configurations 
 ## 4.1. Prepare Conjur configurations
@@ -70,7 +70,7 @@ rm -f puppet-vars.yaml
 ```
 ## 4.2. Prepare Puppet manifest
 - `conjur-demo.pp` is used to demonstrate how a Puppet manifest file can use the Puppet module for Conjur to fetch secrets and use those secrets in other resources
-- `node 'jenkins.vx' {` specifies the node that the manifest will apply to, change this accordingly to your Puppet agent FQDN
+- `node 'foxtrot.vx' {` specifies the node that the manifest will apply to, change this accordingly to your Puppet agent FQDN
 - 2 secrets will be fetch: `world_db/username` and `world_db/password`
 - The Syntax to use the function provided by the Puppet module for Conjur is:
 ```console
@@ -98,19 +98,19 @@ curl -L -o /etc/puppetlabs/code/environments/production/manifests/conjur-demo.pp
 - Change the directory and file name according to your environment
 ```console
 mkdir /etc/puppetlabs/code/environments/production/data/nodes
-curl -L -o /etc/puppetlabs/code/environments/production/data/nodes/jenkins.vx.yaml https://github.com/joetanx/conjur-puppet/raw/main/hiera-config.yaml
+curl -L -o /etc/puppetlabs/code/environments/production/data/nodes/foxtrot.vx.yaml https://github.com/joetanx/conjur-puppet/raw/main/hiera-config.yaml
 ```
 - Rotate a new API key for the Conjur idenity of the Puppet agent and insert to the Hiera file
 ```console
 NEWAPIKEY=$(conjur host rotate-api-key -i puppet/demo | grep 'New API key' | cut -d ' ' -f 5)
-sed -i "s/<insert-new-api-key>/$NEWAPIKEY/" /etc/puppetlabs/code/environments/production/data/nodes/jenkins.vx.yaml
+sed -i "s/<insert-new-api-key>/$NEWAPIKEY/" /etc/puppetlabs/code/environments/production/data/nodes/foxtrot.vx.yaml
 ```
 - Retrieve the certificate of your Conjur appliance and insert to the Hiera file
 ```console
 openssl s_client -showcerts -connect conjur.vx:443 </dev/null 2>/dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > conjur-certificate.pem
 sed -i 's/^/    /' conjur-certificate.pem
-sed -i '/<insert-conjur-certificate>/ r conjur-certificate.pem' /etc/puppetlabs/code/environments/production/data/nodes/jenkins.vx.yaml
-sed -i '/<insert-conjur-certificate>/d' /etc/puppetlabs/code/environments/production/data/nodes/jenkins.vx.yaml
+sed -i '/<insert-conjur-certificate>/ r conjur-certificate.pem' /etc/puppetlabs/code/environments/production/data/nodes/foxtrot.vx.yaml
+sed -i '/<insert-conjur-certificate>/d' /etc/puppetlabs/code/environments/production/data/nodes/foxtrot.vx.yaml
 ```
 - Clean-up
 ```console
