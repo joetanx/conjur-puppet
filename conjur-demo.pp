@@ -1,4 +1,4 @@
-node 'jenkins.vx' {
+node 'foxtrot.vx' {
 
     $conjurusername = Deferred(conjur::secret, ['world_db/username', {
         appliance_url => lookup('conjur::appliance_url'),
