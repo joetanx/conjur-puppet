@@ -1,0 +1,15 @@
+- !policy
+  id: puppet
+  body:
+  - !layer
+  - !host
+    id: demo
+  - !grant 
+    role: !layer
+    member: !host demo
+- !grant
+  role: !group world_db/consumers
+  member: !layer puppet
+- !grant
+  role: !group aws_api/consumers
+  member: !layer puppet
