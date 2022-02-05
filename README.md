@@ -2,6 +2,9 @@
 - RHEL 8.5
 - Puppet 7.14
 - Conjur 12.4
+### Servers
+- conjur.vx: Conjur master, Puppet server
+- jenkins.vx: Puppet agent
 
 # 1. Setup MySQL database
 - Setup MySQL database according to this guide: https://github.com/joetanx/mysql-world_db
