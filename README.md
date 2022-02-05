@@ -118,5 +118,16 @@ rm -f conjur-certificate.pem
 ```
 - Verify the run results
 ```console
-
+[root@conjur ~]# ls -l
+total 8
+-rw-r--r--. 1 root root   63 Feb  5 21:52 2022-02-05T13:52:12+00:00.log
+-rw-------. 1 root root 1493 Dec  6 23:11 anaconda-ks.cfg
+[root@conjur ~]# cat '2022-02-05T13:52:12+00:00.log'
+Database
+information_schema
+mysql
+performance_schema
+sys
+world
+[root@conjur ~]#
 ```
