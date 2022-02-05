@@ -102,7 +102,7 @@ sed -i "s/<insert-new-api-key>/$NEWAPIKEY/" /etc/puppetlabs/code/environments/pr
 - Retrieve the certificate of your Conjur appliance and insert to the Hiera file
 ```console
 openssl s_client -showcerts -connect conjur.vx:443 </dev/null 2>/dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > conjur-certificate.pem
-sed -i 's/^/  /' conjur-certificate.pem
+sed -i 's/^/    /' conjur-certificate.pem
 sed -i '/<insert-conjur-certificate>/ r conjur-certificate.pem' /etc/puppetlabs/code/environments/production/data/nodes/jenkins.vx.yaml
 sed -i '/<insert-conjur-certificate>/d' /etc/puppetlabs/code/environments/production/data/nodes/jenkins.vx.yaml
 ```
