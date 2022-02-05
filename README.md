@@ -58,7 +58,7 @@ EOF
 curl -L -o puppet-vars.yaml https://github.com/joetanx/conjur-puppet/raw/main/puppet-vars.yaml
 conjur policy load -b root -f puppet-vars.yaml
 ```
-- Clean-u
+- Clean-up
 ```console
 rm -f puppet-vars.yaml
 ```
