@@ -14,6 +14,13 @@ yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarc
 yum -y install https://yum.puppetlabs.com/puppet-release-el-8.noarch.rpm
 yum -y install puppetserver hiera
 firewall-cmd --add-service puppetmaster --permanent && firewall-cmd --reload
+cat << EOF >> /etc/puppetlabs/puppet/puppet.conf
+[main]
+certname = conjur.vx
+server = conjur.vx
+[server]
+dns_alt_names = conjur.vx
+EOF
 sed -i "s/Xms2g/Xms1g/" /etc/sysconfig/puppetserver
 sed -i "s/Xmx2g/Xmx1g/" /etc/sysconfig/puppetserver
 /opt/puppetlabs/bin/puppetserver ca setup
