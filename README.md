@@ -54,7 +54,7 @@ EOF
 ## 4.1. Prepare Conjur configurations
 - Install Puppet module for Conjur. Ref: https://github.com/cyberark/conjur-puppet
 - Load the Conjur policy `puppet-vars.yaml`
-  - Creates the policy `puppet` is with a same-name layer and a host `demo`
+  - Creates the policy `puppet` with a same-name layer and a host `demo`
   - The Puppet agent will use the Conjur identity `host/puppet/demo` to retrieve credentials
   - Adds `puppet` layer to `consumers` group for `world_db` and `aws_api` policies
   - The `world_db` and `aws_api` policies are defined in `app-vars.yaml` in https://github.com/joetanx/conjur-master
