@@ -71,7 +71,9 @@ rm -f puppet-vars.yaml
 ## 4.2. Prepare Puppet manifest
 - `conjur-demo.pp` is used to demonstrate how a Puppet manifest file can use the Puppet module for Conjur to fetch secrets and use those secrets in other resources
 - `node 'foxtrot.vx' {` specifies the node that the manifest will apply to, change this accordingly to your Puppet agent FQDN
-- 2 secrets will be fetch: `world_db/username` and `world_db/password`
+- 2 sets if secrets will be fetch:
+  - `world_db/username` and `world_db/password`
+  - `aws_api/awsakid` and `aws_api/awssak`
 - The Syntax to use the function provided by the Puppet module for Conjur is:
 ```console
     $<puppet-variable-name> = Deferred(conjur::secret, ['<conjur-variable-name>', {
@@ -86,6 +88,14 @@ rm -f puppet-vars.yaml
 - The `$mysqlcommand` variable assignment prepares the demonstration MySQL command to be used with the `exec` resource
   - This MySQL command will login to the MySQL server and do a `SHOW DATABASES` command, then output it to a file named after the current run time at the `/root` directory
   - Change the MySQL command accordingly to your environment
+  - This assumes that you have setup a MySQL server according to this guide: https://github.com/joetanx/mysql-world_db
+  - This also assumes that the MySQL client is installed on the Puppet agent node
+- The `$awscommand` variable assignment prepares the demonstration AWS CLI command to be used with the `exec` resource
+  - This AWS CLI command will:
+    - Set the retrieved credentials as environment variables
+    - Run the aws iam list-users commands
+    - Output it to a file named after the current run time at the `/root` directory
+  - Change the AWS CLI command accordingly to your environment
   - This assumes that you have setup a MySQL server according to this guide: https://github.com/joetanx/mysql-world_db
   - This also assumes that the MySQL client is installed on the Puppet agent node
 - For more details on how to fetch and use secrets from Conjur, refer to the Puppet module for Conjur page: https://github.com/cyberark/conjur-puppet
@@ -117,6 +127,15 @@ sed -i '/<insert-conjur-certificate>/d' /etc/puppetlabs/code/environments/produc
 rm -f conjur-certificate.pem
 ```
 - Change any other variables according to your environment
+## 4.4 Install AWS CLI on Puppet agent node
+- We will use the AWS CLI in the Puppet manifest to demonstrate the AWS API calls
+- Setup AWS CLI
+```console
+yum -y install unzip
+curl https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip
+unzip awscliv2.zip
+./aws/install
+```
 # 5. Run the demonstration
 - Request catalog from Puppet agent node
 ```console
@@ -124,16 +143,28 @@ rm -f conjur-certificate.pem
 ```
 - Verify the run results
 ```console
-[root@conjur ~]# ls -l
-total 8
--rw-r--r--. 1 root root   63 Feb  5 21:52 2022-02-05T13:52:12+00:00.log
--rw-------. 1 root root 1493 Dec  6 23:11 anaconda-ks.cfg
-[root@conjur ~]# cat '2022-02-05T13:52:12+00:00.log'
+[root@foxtrot ~]# ls -l
+total 16
+-rw-r--r--. 1 root root 6912 Feb  7 15:34 2022-02-07T07:34:24+00:00-aws.log
+-rw-r--r--. 1 root root   63 Feb  7 15:34 2022-02-07T07:34:24+00:00-mysql.log
+-rw-------. 1 root root 1486 Dec 13 12:17 anaconda-ks.cfg
+[root@foxtrot ~]# tail 2022-02-07T07\:34\:24+00\:00-aws.log
+        },
+        {
+            "Path": "/",
+            "UserName": "Sensitive [value redacted]",
+            "UserId": "Sensitive [value redacted]",
+            "Arn": "Sensitive [value redacted]",
+            "CreateDate": "Sensitive [value redacted]"
+        }
+    ]
+}
+[root@foxtrot ~]# cat 2022-02-07T07\:34\:24+00\:00-mysql.log
 Database
 information_schema
 mysql
 performance_schema
 sys
 world
-[root@conjur ~]#
+[root@foxtrot ~]#
 ```
