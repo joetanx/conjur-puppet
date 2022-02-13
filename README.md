@@ -136,6 +136,10 @@ curl https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip
 unzip awscliv2.zip
 ./aws/install
 ```
+- Clean-up
+```console
+rm -rf aws awscliv2.zip
+```
 # 5. Run the demonstration
 - Request catalog from Puppet agent node
 ```console
