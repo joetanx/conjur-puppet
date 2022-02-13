@@ -71,7 +71,7 @@ rm -f puppet-vars.yaml
 ## 4.2. Prepare Puppet manifest
 - `conjur-demo.pp` is used to demonstrate how a Puppet manifest file can use the Puppet module for Conjur to fetch secrets and use those secrets in other resources
 - `node 'foxtrot.vx' {` specifies the node that the manifest will apply to, change this accordingly to your Puppet agent FQDN
-- 2 sets if secrets will be fetch:
+- 2 sets of secrets will be fetched:
   - `world_db/username` and `world_db/password`
   - `aws_api/awsakid` and `aws_api/awssak`
 - The Syntax to use the function provided by the Puppet module for Conjur is:
