@@ -1,6 +1,6 @@
 # Introduction
 - This guide demonstrates how Puppet agents can retrieve credentials from Conjur.
-- The integration between Puppet and Conjur is established using the Puppet module for Conjur: https://github.com/cyberark/conjur-puppet.
+- The integration between Puppet and Conjur is established using the Puppet module for Conjur: https://forge.puppet.com/modules/cyberark/conjur.
 - The demonstration will use 2 Puppet `exec` resource:
   - Run a sql command to show databases using the credentials retrieved from Conjur, and save the output to /root/<%= $time %>-mysql.log
   - Run an AWS CLI command to list users using the credentials retrieved from Conjur, and save the output to /root/<%= $time %>-aws.log
