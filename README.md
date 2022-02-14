@@ -133,11 +133,11 @@ sed -i '/<insert-conjur-certificate>/d' /etc/puppetlabs/code/environments/produc
 rm -f conjur-certificate.pem
 ```
 - Change any other variables according to your environment
-## 4.4 Install AWS CLI on Puppet agent node
+## 4.4 Install AWS CLI and MySQL client on Puppet agent node
 - We will use the AWS CLI in the Puppet manifest to demonstrate the AWS API calls
 - Setup AWS CLI
 ```console
-yum -y install unzip
+yum -y install unzip mysql
 curl https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip
 unzip awscliv2.zip
 ./aws/install
