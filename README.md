@@ -3,13 +3,16 @@
 - This guide demonstrates how Puppet agents can retrieve credentials from Conjur.
 - The integration between Puppet and Conjur is established using the Puppet module for Conjur: <https://forge.puppet.com/modules/cyberark/conjur>.
 - The demonstration will use 2 Puppet `exec` resource:
-  - Run a sql command to show databases using the credentials retrieved from Conjur, and save the output to /root/<%= $time %>-mysql.log
-  - Run an AWS CLI command to list users using the credentials retrieved from Conjur, and save the output to /root/<%= $time %>-aws.log
+  - Run a sql command to show databases using the credentials retrieved from Conjur, and save the output to `/root/<%= $time %>-mysql.log`
+  - Run an AWS CLI command to list users using the credentials retrieved from Conjur, and save the output to `/root/<%= $time %>-aws.log`
+
 ### Software Versions
 - RHEL 8.5
 - Puppet 7.14
 - Conjur 12.4
+
 ### Servers
+
 | Hostname  | Role |
 | --- | --- |
 | conjur.vx  | Conjur master, Puppet server  |
@@ -18,8 +21,10 @@
 
 # 1. Setup MySQL database
 - Setup MySQL database according to this guide: <https://joetanx.github.io/mysql-world_db>
+
 # 2. Setup Conjur master
 - Setup Conjur master according to this guide: <https://joetanx.github.io/conjur-master>
+
 # 3. Setup Puppet
 ## 3.1. Setup Puppet server
 ```console
@@ -39,6 +44,7 @@ sed -i "s/Xmx2g/Xmx1g/" /etc/sysconfig/puppetserver
 /opt/puppetlabs/bin/puppetserver ca setup
 systemctl enable --now puppetserver
 ```
+
 ## 3.2. Setup Puppet agent
 ```console
 yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
@@ -51,12 +57,14 @@ server = conjur.vx
 EOF
 /opt/puppetlabs/bin/puppet resource service puppet ensure=running enable=true
 ```
+
 ## 3.3. Connect Puppet agent to Puppet server
 - Check and sign CSR on Puppet server
 ```console
 /opt/puppetlabs/bin/puppetserver ca list
 /opt/puppetlabs/bin/puppetserver ca sign --certname foxtrot.vx
 ```
+
 # 4. Preparatory configurations 
 ## 4.1. Prepare Conjur configurations
 - Install Puppet module for Conjur. Ref: <https://github.com/cyberark/conjur-puppet>
@@ -66,6 +74,7 @@ EOF
   - Adds `puppet` layer to `consumers` group for `world_db` and `aws_api` policies
   - The `world_db` and `aws_api` policies are defined in `app-vars.yaml` in <https://joetanx.github.io/conjur-master>
 > `puppet-vars.yaml` builds on top of `app-vars.yaml` in <https://joetanx.github.io/conjur-master>. Loading `puppet-vars.yaml` without having `app-vars.yaml` loaded previously will not work.
+
 ```console
 /opt/puppetlabs/bin/puppet module install cyberark-conjur
 curl -L -o puppet-vars.yaml https://github.com/joetanx/conjur-puppet/raw/main/puppet-vars.yaml
@@ -75,6 +84,7 @@ conjur policy load -b root -f puppet-vars.yaml
 ```console
 rm -f puppet-vars.yaml
 ```
+
 ## 4.2. Prepare Puppet manifest
 - `conjur-demo.pp` is used to demonstrate how a Puppet manifest file can use the Puppet module for Conjur to fetch secrets and use those secrets in other resources
 - `node 'foxtrot.vx' {` specifies the node that the manifest will apply to, change this accordingly to your Puppet agent FQDN
@@ -110,6 +120,7 @@ rm -f puppet-vars.yaml
 ```console
 curl -L -o /etc/puppetlabs/code/environments/production/manifests/conjur-demo.pp https://github.com/joetanx/conjur-puppet/raw/main/conjur-demo.pp
 ```
+
 ## 4.3. Prepare Hiera variables
 - The commands below creates the data directory and downloads the Hiera file to a file named after the Puppet agent FQDN
 - Change the directory and file name according to your environment
@@ -134,6 +145,7 @@ sed -i '/<insert-conjur-certificate>/d' /etc/puppetlabs/code/environments/produc
 rm -f conjur-certificate.pem
 ```
 - Change any other variables according to your environment
+
 ## 4.4 Install AWS CLI and MySQL client on Puppet agent node
 - We will use the AWS CLI in the Puppet manifest to demonstrate the AWS API calls
 - Setup AWS CLI
@@ -147,6 +159,7 @@ unzip awscliv2.zip
 ```console
 rm -rf aws awscliv2.zip
 ```
+
 # 5. Run the demonstration
 - Request catalog from Puppet agent node
 ```console
