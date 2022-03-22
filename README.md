@@ -9,7 +9,7 @@
 ### Software Versions
 - RHEL 8.5
 - Puppet 7.14
-- Conjur 12.4
+- Conjur 12.5
 
 ### Servers
 
@@ -27,11 +27,13 @@
 
 # 3. Setup Puppet
 ## 3.1. Setup Puppet server
+- Setup Puppet repository, install Puppet server package, add firewall rule for Puppet server
 ```console
-yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
 yum -y install https://yum.puppetlabs.com/puppet-release-el-8.noarch.rpm
 yum -y install puppetserver hiera
 firewall-cmd --add-service puppetmaster --permanent && firewall-cmd --reload
+```
+- Configure Puppet server
 cat << EOF >> /etc/puppetlabs/puppet/puppet.conf
 [main]
 certname = conjur.vx
@@ -39,15 +41,25 @@ server = conjur.vx
 [server]
 dns_alt_names = conjur.vx
 EOF
-sed -i "s/Xms2g/Xms1g/" /etc/sysconfig/puppetserver
-sed -i "s/Xmx2g/Xmx1g/" /etc/sysconfig/puppetserver
+sed -i 's/Xms2g/Xms1g/' /etc/sysconfig/puppetserver
+sed -i 's/Xmx2g/Xmx1g/' /etc/sysconfig/puppetserver
+```
+- Optional - change Java to version 11
+  - The Puppet server package installs Java 8 as a dependency
+  - If you already have applications on the server using Java 11, this will break your application; I have Jenkins running on Java 11 in my lab
+  - Change the `/usr/bin/java` link back to Java 11 after installing Puppet server to resolve this
+```console
+rm -f /usr/bin/java
+ln -s /usr/lib/jvm/jre-11-openjdk-11.0.12.0.7-4.el8.x86_64/bin/java /usr/bin/java
+```
+- Initialize Puppet server CA and start Puppet server
+```console
 /opt/puppetlabs/bin/puppetserver ca setup
 systemctl enable --now puppetserver
 ```
 
 ## 3.2. Setup Puppet agent
 ```console
-yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
 yum -y install https://yum.puppetlabs.com/puppet-release-el-8.noarch.rpm
 yum -y install puppet-agent
 cat << EOF >> /etc/puppetlabs/puppet/puppet.conf
