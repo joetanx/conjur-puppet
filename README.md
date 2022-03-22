@@ -27,13 +27,14 @@
 
 # 3. Setup Puppet
 ## 3.1. Setup Puppet server
-- Setup Puppet repository, install Puppet server package, add firewall rule for Puppet server
+- Setup Puppet repository, install Puppet server and Hiera package, add firewall rule for Puppet server
 ```console
 yum -y install https://yum.puppetlabs.com/puppet-release-el-8.noarch.rpm
 yum -y install puppetserver hiera
 firewall-cmd --add-service puppetmaster --permanent && firewall-cmd --reload
 ```
 - Configure Puppet server
+```console
 cat << EOF >> /etc/puppetlabs/puppet/puppet.conf
 [main]
 certname = conjur.vx
