@@ -143,7 +143,7 @@ curl -L -o /etc/puppetlabs/code/environments/production/data/nodes/foxtrot.vx.ya
 ```
 - Rotate a new API key for the Conjur idenity of the Puppet agent and insert to the Hiera file
 ```console
-NEWAPIKEY=$(conjur host rotate-api-key -i puppet/demo | grep 'New API key' | cut -d ' ' -f 5)
+NEWAPIKEY=$(conjur host rotate-api-key -i puppet/demo | awk -F : '{print $2}')
 sed -i "s/<insert-new-api-key>/$NEWAPIKEY/" /etc/puppetlabs/code/environments/production/data/nodes/foxtrot.vx.yaml
 ```
 - Retrieve the certificate of your Conjur appliance and insert to the Hiera file
