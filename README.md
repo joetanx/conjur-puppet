@@ -20,10 +20,10 @@
 | mysql.vx  | MySQL server  |
 
 # 1. Setup MySQL database
-- Setup MySQL database according to this guide: <https://joetanx.github.io/mysql-world_db>
+- Setup MySQL database according to this guide: <https://github.com/joetanx/mysql-world_db>
 
 # 2. Setup Conjur master
-- Setup Conjur master according to this guide: <https://joetanx.github.io/conjur-master>
+- Setup Conjur master according to this guide: <https://github.com/joetanx/conjur-master>
 
 # 3. Setup Puppet
 ## 3.1. Setup Puppet server
@@ -85,8 +85,8 @@ EOF
   - Creates the policy `puppet` with a same-name layer and a host `demo`
   - The Puppet agent will use the Conjur identity `host/puppet/demo` to retrieve credentials
   - Adds `puppet` layer to `consumers` group for `world_db` and `aws_api` policies
-  - The `world_db` and `aws_api` policies are defined in `app-vars.yaml` in <https://joetanx.github.io/conjur-master>
-> `puppet-vars.yaml` builds on top of `app-vars.yaml` in <https://joetanx.github.io/conjur-master>. Loading `puppet-vars.yaml` without having `app-vars.yaml` loaded previously will not work.
+  - The `world_db` and `aws_api` policies are defined in `app-vars.yaml` in <https://github.com/joetanx/conjur-master>
+> `puppet-vars.yaml` builds on top of `app-vars.yaml` in <https://github.com/joetanx/conjur-master>. Loading `puppet-vars.yaml` without having `app-vars.yaml` loaded previously will not work.
 
 ```console
 /opt/puppetlabs/bin/puppet module install cyberark-conjur
@@ -118,7 +118,7 @@ rm -f puppet-vars.yaml
 - The `$mysqlcommand` variable assignment prepares the demonstration MySQL command to be used with the `exec` resource
   - This MySQL command will login to the MySQL server and do a `SHOW DATABASES` command, then output it to a file named after the current run time at the `/root` directory
   - Change the MySQL command accordingly to your environment
-  - This assumes that you have setup a MySQL server according to this guide: <https://joetanx.github.io/mysql-world_db>
+  - This assumes that you have setup a MySQL server according to this guide: <https://github.com/joetanx/mysql-world_db>
   - This also assumes that the MySQL client is installed on the Puppet agent node
 - The `$awscommand` variable assignment prepares the demonstration AWS CLI command to be used with the `exec` resource
   - This AWS CLI command will:
@@ -126,7 +126,7 @@ rm -f puppet-vars.yaml
     - Run the aws iam list-users commands
     - Output it to a file named after the current run time at the `/root` directory
   - Change the AWS CLI command accordingly to your environment
-  - This assumes that you have setup a MySQL server according to this guide: <https://joetanx.github.io/mysql-world_db>
+  - This assumes that you have setup a MySQL server according to this guide: <https://github.com/joetanx/mysql-world_db>
   - This also assumes that the MySQL client is installed on the Puppet agent node
 - For more details on how to fetch and use secrets from Conjur, refer to the Puppet module for Conjur page: <https://github.com/cyberark/conjur-puppet>
 - The command below downloads the manifest file to the default folder for `production` environment, change this accordingly for your Puppet configuration
