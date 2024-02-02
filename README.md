@@ -23,7 +23,7 @@
 - Setup MySQL database according to this guide: <https://github.com/joetanx/mysql-world_db>
 
 # 2. Setup Conjur master
-- Setup Conjur master according to this guide: <https://github.com/joetanx/conjur-master>
+- Setup Conjur master according to this guide: <https://github.com/joetanx/setup/blob/main/conjur.md>
 
 # 3. Setup Puppet
 ## 3.1. Setup Puppet server
@@ -85,8 +85,8 @@ EOF
   - Creates the policy `puppet` with a same-name layer and a host `demo`
   - The Puppet agent will use the Conjur identity `host/puppet/demo` to retrieve credentials
   - Adds `puppet` layer to `consumers` group for `world_db` and `aws_api` policies
-  - The `world_db` and `aws_api` policies are defined in `app-vars.yaml` in <https://github.com/joetanx/conjur-master>
-> `puppet-vars.yaml` builds on top of `app-vars.yaml` in <https://github.com/joetanx/conjur-master>. Loading `puppet-vars.yaml` without having `app-vars.yaml` loaded previously will not work.
+  - The `world_db` and `aws_api` policies are defined in `app-vars.yaml` in <https://github.com/joetanx/setup/blob/main/app-vars.yaml>
+> `puppet-vars.yaml` builds on top of `app-vars.yaml` in <https://github.com/joetanx/setup/blob/main/app-vars.yaml>. Loading `puppet-vars.yaml` without having `app-vars.yaml` loaded previously will not work.
 
 ```console
 /opt/puppetlabs/bin/puppet module install cyberark-conjur
